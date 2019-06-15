@@ -89,7 +89,13 @@ namespace UnitTests
       Assert::AreEqual(20.0, dms.getMinutes(), DELTA);
       Assert::AreEqual(0.0, dms.getSeconds(), DELTA);
       Assert::AreEqual(std::string("300°20´0´´"), dms.getDmsFormatString());
-				
+
+
+      double t = 13.069444;
+      Assert::AreEqual(dms.setDegreesVal(t), t, DELTA);
+      Assert::AreEqual(13.0, dms.getDegrees(), DELTA);
+      Assert::AreEqual(4.0, dms.getMinutes(), DELTA);
+      Assert::AreEqual(9.9984, dms.getSeconds(), DELTA);				
 		}
 	};
 }
