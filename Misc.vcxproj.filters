@@ -23,5 +23,8 @@
     <ClInclude Include="Signal.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="mir_algorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
