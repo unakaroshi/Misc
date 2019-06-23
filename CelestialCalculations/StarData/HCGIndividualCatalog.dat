@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Catalog>
+  <CatalogType>Hickson Compact Groups (HCG) of Individual Galaxies (from HEASARC)</CatalogType>
+  <Description>Hickson Compact Groups of Galaxies (HCG) Individual Galaxies Data</Description>
+  <VisualMagnitudeLimit>14.7</VisualMagnitudeLimit>
+  <Epoch>2000.0</Epoch>
+  <Author>Hickson, Kindl, Auman; Hickson</Author>
+  <Date>2007-05-11 19:01:11</Date>
+  <Source>http://heasarc.gsfc.nasa.gov/W3Browse/galaxy-catalog/hcggalaxy.html</Source>
+  <Comments>
+    Catalog covers 18 Constellations and contains 75 Objects.
+    File was saved: Mon Jul 06 16:52:54 EDT 2015
+    File was created and filtered by J. L. Lawrence
+  </Comments>
+  <DataFormatDescrip>
+    The format for star catalogs requires that the objects in the catalog
+    be sorted by constellation (i.e., constellation abbreviated name) and then by
+    object name within the constellations. The data below, sorted by constellation
+    and then by object name, is saved as comma delimited fields as follows:
+    Name,RA,Decl,mV,Constellation,Alternate Name,Comment
+    IMPORTANT NOTE: Because commas are used as field delimiters, commas must **NOT**
+    be included in the Name, Alternate Name, or Comment fields!
+  </DataFormatDescrip>
+  <Data>
+    HCG 01c,0.431800,25.723326,10.210000,And,,
+    HCG 10a,1.439295,34.702041,13.490000,And,N536,H I anomalous profile (I)
+    HCG 10b,1.427878,34.712841,13.350000,And,N529,Sharp extension (M)
+    HCG 88a,20.876476,-5.710684,14.220000,Aqr,N6978,Lopsided r.c.-weak radio-IR (I)
+    HCG 88b,20.874929,-5.746545,14.280000,Aqr,N6977,Low-luminosity extension-ring in H_alpha (I)
+    HCG 71a,14.182517,25.496702,14.570000,Boo,I4381,
+    HCG 73a,15.045058,23.332467,14.140000,Boo,N5829,
+    HCG 63b,13.035364,-32.787505,14.470000,Cen,,Tidal spiral arm-possibly IR (I)
+    HCG 04a,0.570462,-21.438568,13.800000,Cet,,IR
+    HCG 07a,0.653767,0.863634,13.500000,Cet,N192,Dust lane-tidal spiral arms-radio-IR (I)
+    HCG 07b,0.655011,0.912730,13.940000,Cet,N196,
+    HCG 07c,0.659737,0.859617,13.650000,Cet,N201,IR
+    HCG 11a,1.442793,-23.226088,13.650000,Cet,,
+    HCG 16a,2.156875,-10.136216,13.050000,Cet,N835,Disturbed morpho-lopsided r.c.-radio-IR (I)
+    HCG 16b,2.155740,-10.133089,13.830000,Cet,N833,Tidal tails-peculiar r.c. (I)
+    HCG 16c,2.160714,-10.146365,13.720000,Cet,N838,Sinusoidal r.c.-radio-IR (M)
+    HCG 16d,2.161915,-10.183939,13.980000,Cet,N839,Sinusoidal r.c.-radio-IR (M)
+    HCG 19a,2.710665,-12.421275,14.510000,Cet,,
+    HCG 25a,3.345319,-1.109354,14.700000,Cet,U2690,Weak radio IR
+    HCG 37a,9.227626,29.992425,13.920000,Cnc,N2783,Rapidly rotating disk of ionized gas-blue-radio (I)
+    HCG 61a,12.205153,29.179804,13.200000,Com,N4169,Disturbed morpho in the center (dust?) outer n.c.i. (I)
+    HCG 61b,12.205626,29.211805,13.730000,Com,N4173,
+    HCG 61c,12.208596,29.168538,14.310000,Com,N4175,Dust-intense extended H_alpha emission-IR (I)
+    HCG 61d,12.207436,29.149117,14.480000,Com,N4174,Polar ring (I)
+    HCG 68a,13.890715,40.282939,12.040000,CVn,N5353,Radio
+    HCG 68b,13.890740,40.302468,12.520000,CVn,N5354,Strong dust lane radio
+    HCG 68c,13.889370,40.363310,12.110000,CVn,N5350,Peculiar morpho radio-lR (I)
+    HCG 68d,13.896014,40.338122,14.270000,CVn,N5355,Boxyisophote-shells (?)
+    HCG 21b,2.760066,-17.689231,14.690000,Eri,,
+    HCG 22a,3.060704,-15.613689,12.780000,Eri,N1199,Dust lane
+    HCG 22c,3.056761,-15.623316,14.550000,Eri,,
+    HCG 30a,4.605163,-2.831286,13.790000,Eri,,
+    HCG 30b,4.608413,-2.866562,14.330000,Eri,,Dust lane
+    HCG 31c,5.027167,-4.257695,13.440000,Eri,Mk1089,Peculiar morpho and r.c.-IR (I M)
+    HCG 40a,9.648206,-4.849036,14.090000,Hya,,Disky elliptical-radio
+    HCG 42a,10.003919,-19.636518,12.340000,Hya,N3091,Radio-inner boxy isophotes
+    HCG 42b,10.009225,-19.662074,14.520000,Hya,,
+    HCG 42c,10.002851,-19.622257,14.560000,Hya,,
+    HCG 48a,10.629788,-27.080512,14.020000,Hya,I2597,Small disk in the oenter
+    HCG 65a,13.497469,-29.514745,14.670000,Hya,,n.c.i. (I)
+    HCG 44a,10.301699,21.831339,12.430000,Leo,N3190,Peculiar vel. pattern and morpho dust-boxy-radio IR (I)
+    HCG 44b,10.306953,21.892811,14.210000,Leo,N3193,[N 1l] H_alpha emission-rotating core (I)
+    HCG 44c,10.294092,21.688219,13.350000,Leo,N3185,Seyfert-knotty ring in H_alpha (I) weak radio IR
+    HCG 44d,10.296668,21.873305,14.280000,Leo,N3187,Peculiar r.c.-tidal tail-weak radio IR (I)
+    HCG 51a,11.374013,24.298719,14.490000,Leo,N3651,
+    HCG 53a,11.480659,20.795340,13.870000,Leo,N3697,
+    HCG 54a,11.487555,20.583575,14.160000,Leo,I700,Strongly disturbed morpho (I)
+    HCG 57a,11.631606,21.980837,14.660000,Leo,N3753,Peculiar morpho and r.c.-tidal tail dust-possibly IR (I)
+    HCG 92a,22.600968,33.948456,13.470000,Peg,N7320,
+    HCG 92b,22.599600,33.965948,14.060000,Peg,N7318B,Tidal arm (I)
+    HCG 92c,22.601070,33.975347,14.250000,Peg,N7319,Tidal arm-Seyfert galaxy-radio-IR (I M)
+    HCG 92d,22.599140,33.965547,14.470000,Peg,N7318A,Tidal arm-weak radio (I M)
+    HCG 93a,23.254453,18.961469,13.480000,Peg,N7550,Strongly n.c.i. (dust?) emission-radio (I M?)
+    HCG 93b,23.254781,19.041585,14.130000,Peg,N7594,Open tidal arm to the north-radio IR (I)
+    HCG 94a,23.287079,18.707821,14.660000,Peg,N7578B,Common envelope with b-peculiar radio (I M)
+    HCG 96a,23.465808,8.778213,14.010000,Peg,N7674,Tail-like-Seyfert strong radio-IR (I)
+    HCG 100a,0.022250,13.110948,14.200000,Peg,N7803,Lopsided r.c.-boy isophotes-radio-IR (I)
+    HCG 90a,22.033926,-31.870135,13.130000,PsA,N7172,Strong dust lane across galaxy-IR
+    HCG 90b,22.035754,-31.990680,12.660000,PsA,N7176,
+    HCG 90c,22.034282,-31.974511,14.030000,PsA,N7173,n.c.i. toward b and d (I)
+    HCG 90d,22.035068,-31.994233,14.370000,PsA,N7174,Tail-like features to the north of the galaxy-IR (I)
+    HCG 91a,22.152116,-27.809836,13.570000,PsA,N7214,Asym. morpho-IR (I)
+    HCG 02a,0.523304,8.468224,14.020000,Psc,U312,Disturbed morpho tail-like possibly IR (I)
+    HCG 02b,0.521884,8.475182,14.620000,Psc,Mk552,Disturbed morpho-IR (I)
+    HCG 97a,23.789727,-2.300955,14.270000,Psc,I5357,Extended galaxy (I)
+    HCG 98a,23.902810,0.382807,14.140000,Psc,N7783A,Asym. morpho-extension toward 98b (I)
+    HCG 79b,15.986851,20.763124,14.550000,Ser,N6027,Strong bar[N II] H_alpha emission-tidal tail (I)
+    HCG 86a,19.869185,-30.823779,14.630000,Sgr,,Contains faint disk
+    HCG 41a,9.960018,45.229535,14.700000,UMa,U5345,
+    HCG 58a,11.703080,10.277696,14.280000,Vir,N3822,Two ansac 10 kpc from nucleus-radio-IR (I)
+    HCG 58b,11.706551,10.264203,14.100000,Vir,N3825,
+    HCG 58c,11.698104,10.304088,14.510000,Vir,N3817,Weak radio
+    HCG 62a,12.884959,-9.204583,13.790000,Vir,,n.c.i.-radio-large X-ray halo around group (I)
+    HCG 62b,12.884575,-9.198895,14.210000,Vir,,
+    HCG 67a,13.819811,-7.224188,13.430000,Vir,,Two nuclei disturbed morpho (M)
+  </Data>
+</Catalog>
