@@ -53,6 +53,11 @@ public:
   void setSource(const QString& s) noexcept { m_source = s; }
   [[nodiscard]] QString getSource() const noexcept { return m_source; }
 
+  [[nodiscard]] int size() const noexcept { return m_stars.size();
+  }
+
+  [[nodiscard]] bool isEmpty() const noexcept { return m_stars.isEmpty(); }
+  
   [[nodiscard]] int getStarsCount() const noexcept { return m_stars.size(); }
 
   [[nodiscard]] const auto& getStars() const noexcept { return m_stars; }

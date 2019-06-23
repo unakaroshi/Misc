@@ -8,8 +8,17 @@ class CStarDataTableModel : public QAbstractTableModel
 {
   Q_OBJECT
 private:
-  CStarCatalog* m_catalog;
+  //CStarCatalog* m_catalog;
 
+  QVector<CStarCatalog*> m_catalogs { };
+
+  [[nodiscard]] int getCatalogNumber(int row) const;
+
+  [[nodiscard]] int getCatalogNumber(const QModelIndex& index) const;
+
+  [[nodiscard]] auto getElementIndex(int row) const;
+
+  [[nodiscard]] auto getElementIndex(const QModelIndex& index) const;
 
 
   enum class Column {
@@ -29,6 +38,8 @@ public:
   void loadCatalogs();
   
   ~CStarDataTableModel();
+
+  [[nodiscard]] int getAllStarsCount() const; 
 
   [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
 
