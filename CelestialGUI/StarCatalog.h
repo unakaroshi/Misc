@@ -33,8 +33,11 @@ public:
   CStarCatalog(QObject* parent = nullptr);
   virtual ~CStarCatalog() = default;
 
-  CStarCatalog(const CStarCatalog& other) = default;
-  CStarCatalog(CStarCatalog&& other) = default;
+  CStarCatalog(const CStarCatalog& other) = delete;
+    
+  CStarCatalog(CStarCatalog&& other) noexcept = delete;    
+
+  CStarCatalog& CStarCatalog::operator= (const CStarCatalog& rhs) = delete;    
  
   [[nodiscard]] bool loadFromFile(const QString& filename);
 
