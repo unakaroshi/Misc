@@ -183,3 +183,10 @@ QVariant CStarDataTableModel::headerData(int section, Qt::Orientation orientatio
 
   return QVariant();
 }
+
+QStringList CStarDataTableModel::getStarCatalogNames() {
+  QStringList ret;
+  std::for_each(m_catalogs.begin(), m_catalogs.end(), [&](const CStarCatalog *cat) { 
+    ret.append(cat->getCatalogName()); });
+  return ret;
+}

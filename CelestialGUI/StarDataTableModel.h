@@ -49,6 +49,8 @@ public:
 
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
+  [[nodiscard]] QStringList getStarCatalogNames();
+
 signals:
   void dataLoaded();
 };
