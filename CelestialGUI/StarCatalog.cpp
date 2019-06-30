@@ -119,14 +119,18 @@ void CStarCatalog::extractLines(QList<QString>::iterator& begin, QList<QString>:
   std::for_each(begin, end, [&](const QString& line) {
     auto stringlist = line.split(",");
     auto name = stringlist[0].trimmed().toStdString();
+
+    bool hasRa = !stringlist[1].isEmpty();    
     auto ra = stringlist[1].toDouble();
+    bool hasDecl = !stringlist[2].isEmpty();
     auto decl = stringlist[2].toDouble();
+    bool hasMv = !stringlist[3].isEmpty();
     auto mv = stringlist[3].toDouble();
     auto constellation = stringlist[4].trimmed().toStdString();
     auto altname = stringlist[5].trimmed().toStdString();
     auto comment = stringlist[6].trimmed().toStdString();
 
-    localStars.push_back(CStarData(name, ra, decl, mv, constellation, altname, comment, catname));
+    localStars.push_back(CStarData(name, hasRa, ra, hasDecl, decl, hasMv, mv, constellation, altname, comment, catname));
   });
 
   {
