@@ -24,7 +24,12 @@ public:
   bool loadFromFile(const QString& filename);
 
   QString getFullname(const QString& abbr) const {
-    auto el = m_data.value(abbr);
+    // This prevents us from generating a default
+    // constructor con CConstellationElement which
+    // would be called every time this function
+    // gets called.
+    static CConstellationElement tmp("", "");
+    auto el = m_data.value(abbr,tmp);
     return QString::fromStdString(el.getName());
   }
 
