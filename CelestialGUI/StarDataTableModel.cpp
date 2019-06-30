@@ -4,7 +4,6 @@
 #include <QThread>
 #include <QDir>
 #include <QVector>
-#include <QPair>
 #include <qtconcurrentrun.h>
 
 CStarDataTableModel::CStarDataTableModel(QObject *parent)
@@ -18,9 +17,7 @@ void CStarDataTableModel::loadCatalogs() {
 
   auto start = std::chrono::steady_clock::now();
 
-  QDir dir("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/StarData/");
-
-  
+  QDir dir("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/StarData/");  
 
   for (const QString& filename : dir.entryList({ "*.dat" })) {
     CStarCatalog* catalog = new CStarCatalog(this);    
@@ -82,11 +79,11 @@ auto CStarDataTableModel::getElementIndex(int row) const {
   auto number = getCatalogNumber(row);  
 
   if (number < 0) {
-    return QPair { -1,-1 };
+    return std::make_pair(-1, -1);
   }
 
   if (m_catalogs.at(number)->isEmpty()) {
-    return QPair { -1,-1 };
+    return std::make_pair(-1, -1);
   }
 
   int numelements = 0;
@@ -97,7 +94,7 @@ auto CStarDataTableModel::getElementIndex(int row) const {
   auto element = row - numelements;
   //qDebug() << m_catalogs.at(number)->size();
   Q_ASSERT(element< m_catalogs.at(number)->size() );
-  return QPair { number,element };
+  return std::make_pair(number,element);
 }
 
 auto CStarDataTableModel::getElementIndex(const QModelIndex& index) const {
@@ -105,7 +102,7 @@ auto CStarDataTableModel::getElementIndex(const QModelIndex& index) const {
     return getElementIndex(index.row());
     
   }
-  return QPair{ -1,-1 };
+  return std::make_pair(-1, -1);
 }
 
 [[nodiscard]]
