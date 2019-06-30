@@ -53,9 +53,9 @@ bool CConstellationData::read(QIODevice* device) {
     qDebug() << elements[1].trimmed();
 
     auto abbr = elements[0].trimmed();
-    auto name = elements[1].trimmed();
+    auto name = elements[1].trimmed().toStdString();
 
-    m_data.insert(abbr.toStdString(),CConstellationElement(abbr.toStdString(), name.toStdString()));
+    m_data.insert(abbr,CConstellationElement(abbr.toStdString(), name));
   }
 
   return true;
