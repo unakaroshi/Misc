@@ -1,5 +1,6 @@
 #include "StarDataTableModel.h"
 #include "StarCatalog.h"
+#include "ConstellationData.h"
 #include <QDebug>
 #include <QThread>
 #include <QDir>
@@ -7,29 +8,37 @@
 #include <qtconcurrentrun.h>
 
 CStarDataTableModel::CStarDataTableModel(QObject *parent)
-    : QAbstractTableModel(parent)
+  : QAbstractTableModel(parent)
+  , m_constellationData(new CConstellationData(this))
 {
-//  m_catalog = new CStarCatalog(this); 
+
 }
 
-void CStarDataTableModel::loadCatalogs() {
+void CStarDataTableModel::loadData() {
   QVector<QFuture<bool>> results;
+
 
   auto start = std::chrono::steady_clock::now();
 
-  QDir dir("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/StarData/");  
 
-  for (const QString& filename : dir.entryList({ "*.dat" })) {
+  QDir dirStarData("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/StarData/");  
+  QDir dirOtherData("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/Data/");
+
+  for (const QString& filename : dirStarData.entryList({ "*.dat" })) {
     CStarCatalog* catalog = new CStarCatalog(this);    
-    QFuture<bool> res = QtConcurrent::run(catalog, &CStarCatalog::loadFromFile, dir.absoluteFilePath(filename));
+    QFuture<bool> res = QtConcurrent::run(catalog, &CStarCatalog::loadFromFile, dirStarData.absoluteFilePath(filename));
     results.push_back(res);
     m_catalogs.push_back(catalog);
   }
+
+  QFuture<bool> constDataLoaded = QtConcurrent::run(m_constellationData, &CConstellationData::loadFromFile, dirOtherData.absoluteFilePath("ConstellationData.dat"));;
+  results.push_back(constDataLoaded);
 
   int oldcount = 0;
   for (auto result : results) {
     result.waitForFinished();
   }
+  
 
   beginInsertRows(QModelIndex(), 0, getAllStarsCount() - 1);
   endInsertRows();
@@ -138,14 +147,25 @@ QVariant CStarDataTableModel::data(const QModelIndex& index, int role) const {
     }
 
     switch(index.column()) {
-      case 0: return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getName());
-      case 1: return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getRa());
-      case 2: return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getDecl());
-      case 3: return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getMv());
-      case 4: return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getConstellation());
-      case 5: return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getAltName());
-      case 6: return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getComment());
-      case 7: return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getCatalogName());
+      case 0: 
+        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getName());
+      case 1: 
+        return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getRa());
+      case 2: 
+        return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getDecl());
+      case 3: 
+        return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getMv());
+      case 4:
+      {
+        auto abbr = m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getConstellation();
+        return m_constellationData->getFullname(abbr);
+      }
+      case 5: 
+        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getAltName());
+      case 6: 
+        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getComment());
+      case 7: 
+        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getCatalogName());
       default: return QVariant();    
     } 
   }

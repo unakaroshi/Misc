@@ -3,6 +3,7 @@
 #include <QAbstractTableModel>
 
 class CStarCatalog;
+class CConstellationData;
 
 class CStarDataTableModel : public QAbstractTableModel
 {
@@ -11,6 +12,8 @@ private:
   //CStarCatalog* m_catalog;
 
   QVector<CStarCatalog*> m_catalogs { };
+
+  CConstellationData* m_constellationData { nullptr };
 
   [[nodiscard]] int getCatalogNumber(int row) const;
 
@@ -35,7 +38,7 @@ public:
 
   CStarDataTableModel(QObject *parent);
 
-  void loadCatalogs();
+  void loadData();
   
   ~CStarDataTableModel();
 
