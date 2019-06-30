@@ -42,6 +42,9 @@
     <ClCompile Include="StarDataTableModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConstellationData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CelestialGUI.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="StarDataTableModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ConstellationData.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -69,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StarData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstellationElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
