@@ -28,5 +28,5 @@ CelestialGUI::CelestialGUI(QWidget* parent)
     });
   });
    
-  QtConcurrent::run(m_pModel, &CStarDataTableModel::loadCatalogs);
+  QtConcurrent::run(m_pModel, &CStarDataTableModel::loadData);
 }
