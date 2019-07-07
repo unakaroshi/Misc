@@ -6,6 +6,9 @@
 #include <qtconcurrentrun.h>
 #include <QMessageBox>
 #include <QDomDocument>
+#include <algorithm>
+#include <execution>
+#include "ScopedTimer.hpp"
 
 
 
@@ -60,26 +63,26 @@ bool CStarCatalog::read(QIODevice* device)
     return false;
   }
 
-  qDebug() << "Loading StarCatalog";
+  //qDebug() << "Loading StarCatalog";
 
-  QDomElement element = root.firstChildElement(QStringLiteral("CatalogType"));
-  qDebug() << "  CatalogType: " << element.text().trimmed();
+  QDomElement element = root.firstChildElement(QStringLiteral("CatalogType"));  
+  //qDebug() << "  CatalogType: " << element.text().trimmed();
   setCatalogName(element.text().trimmed());
 
   element = root.firstChildElement(QStringLiteral("Comments"));
-  qDebug() << "  Comments: " << element.text().trimmed();
+  //qDebug() << "  Comments: " << element.text().trimmed();
   setComment(element.text().trimmed());
 
   element = root.firstChildElement(QStringLiteral("Author"));
-  qDebug() << "  Author: " << element.text().trimmed();
+  //qDebug() << "  Author: " << element.text().trimmed();
   setAuthor(element.text().trimmed());
 
   element = root.firstChildElement(QStringLiteral("Description"));
-  qDebug() << "  Description: " << element.text().trimmed();
+  //qDebug() << "  Description: " << element.text().trimmed();
   setDescription(element.text().trimmed());
 
   element = root.firstChildElement(QStringLiteral("Source"));
-  qDebug() << "  Source: " << element.text().trimmed();
+  //qDebug() << "  Source: " << element.text().trimmed();
   setSource(element.text().trimmed());
 
 
@@ -105,9 +108,13 @@ bool CStarCatalog::read(QIODevice* device)
   for (auto res : results) {
     res.waitForFinished();
   }
-
-   
-  return false;
+  /*
+  {
+    ScopedTimer t("Sorting");
+    std::stable_sort(std::execution::par, m_stars.begin(), m_stars.end());
+  }
+   */
+  return true;
 }
 
 void CStarCatalog::extractLines(QList<QString>::iterator& begin, QList<QString>::iterator& end) {
