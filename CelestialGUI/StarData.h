@@ -58,7 +58,10 @@ public:
   [[nodiscard]] constexpr bool hasRa() const noexcept { return m_hasRa; }
   [[nodiscard]] constexpr bool hasDecl() const noexcept { return m_hasDecl; }
   [[nodiscard]] constexpr bool hasMv() const noexcept { return m_hasMv; }
-
-
+  
 };
+
+inline bool operator< (const CStarData& lhs, const CStarData& rhs) {
+  return lhs.getName() < rhs.getName();
+}
 
