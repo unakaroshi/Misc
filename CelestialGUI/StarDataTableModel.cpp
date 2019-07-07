@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QVector>
 #include <qtconcurrentrun.h>
+#include "ScopedTimer.hpp"
 
 CStarDataTableModel::CStarDataTableModel(QObject *parent)
   : QAbstractTableModel(parent)
@@ -15,17 +16,15 @@ CStarDataTableModel::CStarDataTableModel(QObject *parent)
 }
 
 void CStarDataTableModel::loadData() {
+  ScopedTimer t(__func__);
   QVector<QFuture<bool>> results;
-
-
-  auto start = std::chrono::steady_clock::now();
 
 
   QDir dirStarData("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/StarData/");  
   QDir dirOtherData("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/Data/");
 
   for (const QString& filename : dirStarData.entryList({ "*.dat" })) {
-    CStarCatalog* catalog = new CStarCatalog(this);    
+    CStarCatalog* catalog = new CStarCatalog();    
     QFuture<bool> res = QtConcurrent::run(catalog, &CStarCatalog::loadFromFile, dirStarData.absoluteFilePath(filename));
     results.push_back(res);
     m_catalogs.push_back(catalog);
@@ -42,12 +41,7 @@ void CStarDataTableModel::loadData() {
 
   beginInsertRows(QModelIndex(), 0, getAllStarsCount() - 1);
   endInsertRows();
-
-  auto end = std::chrono::steady_clock::now();
-  qDebug() << "Elapsed time for SLOT (MAP) in milliseconds : "
-    << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-    << " ms\n";
-
+    
   emit dataLoaded();
 }
 
@@ -174,7 +168,7 @@ QVariant CStarDataTableModel::data(const QModelIndex& index, int role) const {
 
 QVariant CStarDataTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
 
-
+  qDebug() << "SECTION " << section;
   switch (role) {
     default: break;
     case Qt::DisplayRole: {
@@ -188,10 +182,10 @@ QVariant CStarDataTableModel::headerData(int section, Qt::Orientation orientatio
           case 5 : return "Alternate name";
           case 6 : return "Comment";
           case 7 : return "CatalogName";
-          default: return section;        
+          default: return QVariant();        
         }
       } else {
-        return section;
+        return QVariant();
       }
       
     }
