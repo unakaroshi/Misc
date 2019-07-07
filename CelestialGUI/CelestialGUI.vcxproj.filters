@@ -59,6 +59,9 @@
     <QtMoc Include="ConstellationData.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="SortProxyModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="CelestialGUI.ui">
