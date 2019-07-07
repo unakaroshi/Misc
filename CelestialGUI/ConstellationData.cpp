@@ -28,20 +28,20 @@ bool CConstellationData::read(QIODevice* device) {
     return false;
   }
 
-  qDebug() << "Loading Constellationsdata";
+  //qDebug() << "Loading Constellationsdata";
 
   QDomElement element = root.firstChildElement(QStringLiteral("Revision"));
-  qDebug() << "  Revision " << element.text().trimmed();
+  //qDebug() << "  Revision " << element.text().trimmed();
 
 
   element = root.firstChildElement(QStringLiteral("Date"));
-  qDebug() << "  Date " << element.text().trimmed();
+  //qDebug() << "  Date " << element.text().trimmed();
 
 
   QDomElement basicData = root.firstChildElement(QStringLiteral("BasicData")); 
 
   element = basicData.firstChildElement(QStringLiteral("Description"));
-  qDebug() << "  Desc: " << element.text().trimmed();
+  //qDebug() << "  Desc: " << element.text().trimmed();
 
   element = basicData.firstChildElement(QStringLiteral("Data"));
   //qDebug() << "  Data: " << element.text().trimmed();
@@ -50,7 +50,7 @@ bool CConstellationData::read(QIODevice* device) {
 
   for (const QString& line : lines) {
     auto elements = line.split(',');
-    qDebug() << elements[1].trimmed();
+    //qDebug() << elements[1].trimmed();
 
     auto abbr = elements[0].trimmed();
     auto name = elements[1].trimmed().toStdString();
