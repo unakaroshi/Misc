@@ -2,7 +2,7 @@
 #include "StarCatalog.h"
 //#include "FilerProxyModel.h"
 
-#include <QSortFilterProxyModel>
+
 #include <QCheckBox>
 #include <qtconcurrentrun.h>
 #include <QTimer>
@@ -13,11 +13,13 @@ CelestialGUI::CelestialGUI(QWidget* parent)
 {
   ui.setupUi(this);
 
-  QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel();
-  proxyModel->setSourceModel(m_pModel);
+  ui.btn_load->setVisible(false);
+   
+  m_pProxyModel->setSourceModel(m_pModel);
 
   ui.tableView->setSortingEnabled(true);
-  ui.tableView->setModel(proxyModel);
+  ui.tableView->setModel(m_pProxyModel);
+  //ui.tableView->setModel(m_pModel);
 
   connect(m_pModel, &CStarDataTableModel::dataLoaded, ui.tableView, &QTableView::resizeColumnsToContents);
 
@@ -26,7 +28,21 @@ CelestialGUI::CelestialGUI(QWidget* parent)
     std::for_each(catalogs.begin(), catalogs.end(), [&](const QString& cat) {
       ui.cb_catalogs->addItem(cat);
     });
+   // m_pProxyModel->setSortingColumn(0);
+
+  });
+
+  connect(ui.cb_catalogs, qOverload<const QString&>(&QComboBox::currentTextChanged), [&](const QString& s) {
+
+    qDebug() << s;
+
+   // m_pProxyModel->setFilterKeyColumn(7);
+   // m_pProxyModel->setFilterFixedString(s);
+
   });
    
-  QtConcurrent::run(m_pModel, &CStarDataTableModel::loadData);
+  QTimer::singleShot(200, [&]() {
+    QtConcurrent::run(m_pModel, &CStarDataTableModel::loadData);
+  });
+  
 }
