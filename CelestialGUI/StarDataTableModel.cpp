@@ -167,8 +167,7 @@ QVariant CStarDataTableModel::data(const QModelIndex& index, int role) const {
 }
 
 QVariant CStarDataTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
-
-  qDebug() << "SECTION " << section;
+   
   switch (role) {
     default: break;
     case Qt::DisplayRole: {
