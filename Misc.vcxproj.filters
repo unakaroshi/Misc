@@ -23,7 +23,7 @@
     <ClInclude Include="Signal.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="mir_algorithm.h">
+    <ClInclude Include="ScopedTimer.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

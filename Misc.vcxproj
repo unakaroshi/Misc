@@ -156,6 +156,7 @@
     <ClCompile Include="Misc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ScopedTimer.hpp" />
     <ClInclude Include="Signal.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
