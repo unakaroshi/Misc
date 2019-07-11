@@ -140,7 +140,7 @@ public:
 
     {
       ScopedTimer t(__func__);
-      std::sort(std::execution::par, m_mapping.begin(), m_mapping.end(), [](const auto &a, const auto &b) {
+      std::sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [](const auto &a, const auto &b) {
         return a.first < b.first;
       });
     }
@@ -196,7 +196,7 @@ public:
       return QModelIndex();
     }
 
-    auto it = std::find_if(m_mapping.begin(), m_mapping.end(), [&index](const auto& a) {
+    auto it = std::find_if(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&index](const auto& a) {
       return a.second == index.row();
     });
 
