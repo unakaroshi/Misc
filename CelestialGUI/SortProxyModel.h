@@ -203,7 +203,7 @@ public:
     if (it == m_mapping.end()) {
       return QModelIndex();
     }
-
-    return createIndex((*it).second, index.column());
+    
+    return createIndex(it - m_mapping.begin(), index.column());
   }
 };
