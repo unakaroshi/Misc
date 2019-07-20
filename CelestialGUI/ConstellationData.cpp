@@ -1,8 +1,8 @@
 //#include <QFile>
-#include <QDir>
-#include <QMessageBox>
-#include <QDomDocument>
-#include <QDebug>
+#include <QDir> // NOLINT
+#include <QMessageBox> // NOLINT
+#include <QDomDocument> // NOLINT
+#include <QDebug> // NOLINT
 #include "ConstellationData.h"
 
 
@@ -30,43 +30,43 @@ bool CConstellationData::read(QIODevice* device) {
 
   //qDebug() << "Loading Constellationsdata";
 
-  QDomElement element = root.firstChildElement(QStringLiteral("Revision"));
+  //QDomElement element = root.firstChildElement(QStringLiteral("Revision"));
   //qDebug() << "  Revision " << element.text().trimmed();
 
 
-  element = root.firstChildElement(QStringLiteral("Date"));
+  //element = root.firstChildElement(QStringLiteral("Date"));
   //qDebug() << "  Date " << element.text().trimmed();
 
 
   QDomElement basicData = root.firstChildElement(QStringLiteral("BasicData")); 
 
-  element = basicData.firstChildElement(QStringLiteral("Description"));
+  //QDomElement element = basicData.firstChildElement(QStringLiteral("Description"));
   //qDebug() << "  Desc: " << element.text().trimmed();
 
-  element = basicData.firstChildElement(QStringLiteral("Data"));
+  auto element = basicData.firstChildElement(QStringLiteral("Data"));
   //qDebug() << "  Data: " << element.text().trimmed();
 
-  auto lines = element.text().trimmed().split("\r\n");
+  if (element.isText()) {
 
-  for (const QString& line : lines) {
-    auto elements = line.split(',');
-    //qDebug() << elements[1].trimmed();
+    auto lines = element.text().trimmed().split("\r\n");
 
-    auto abbr = elements[0].trimmed();
-    auto name = elements[1].trimmed().toStdString();
+    for (const QString& line : lines) {
+      auto elements = line.split(',');
+      //qDebug() << elements[1].trimmed();
 
-    m_data.insert(abbr,CConstellationElement(abbr.toStdString(), name));
+      auto abbr = elements[0].trimmed();
+      auto name = elements[1].trimmed().toStdString();
+
+      m_data.insert(abbr, CConstellationElement(abbr.toStdString(), name));
+    }
+
+    return true;
   }
-
-  return true;
+  return false;
 }
 
 CConstellationData::CConstellationData(QObject *parent)
     : QObject(parent)
-{
-}
-
-CConstellationData::~CConstellationData()
 {
 }
 

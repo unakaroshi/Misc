@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <string>
+#include <string> // NOLINT
 
 class CConstellationElement {
 private:
@@ -11,15 +11,15 @@ private:
 public:
 
   CConstellationElement(std::string abbr, std::string name) 
-    : m_abbr(abbr)
-    , m_name(name)
+    : m_abbr(std::move(abbr))
+    , m_name(std::move(name))
   { }
 
-  [[nodiscard]] const std::string getAbbr() noexcept {
+  [[nodiscard]] std::string getAbbr() const noexcept {
     return m_abbr;
   }
 
-  [[nodiscard]] const std::string getName() noexcept {
+  [[nodiscard]] std::string getName() const noexcept {
     return m_name;
   }
 };

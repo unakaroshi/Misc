@@ -1,14 +1,14 @@
 #pragma once
 
-#include <QAbstractProxyModel>
+#include <QAbstractProxyModel> // NOLINT
 //#include <QMap>
-#include <QVector>
-#include <QPair>
-#include <QDebug>
-#include <vector>
-#include <utility>
-#include <algorithm>
-#include <execution>
+#include <QVector> // NOLINT
+#include <QPair> // NOLINT
+#include <QDebug> // NOLINT
+#include <vector> // NOLINT
+#include <utility> // NOLINT
+#include <algorithm> // NOLINT
+#include <execution> // NOLINT
 
 #include "ScopedTimer.hpp"
 
@@ -72,6 +72,8 @@ public:
     }
 
     QAbstractProxyModel::setSourceModel(newSourceModel);
+    m_mapping.clear();
+    m_mapping.reserve(0);
 
     if (sourceModel()) {
       connect(sourceModel(), SIGNAL(rowsAboutToBeInserted(const QModelIndex&, int, int)),
@@ -121,17 +123,21 @@ public:
     endResetModel();
   }
 
-  Q_SLOT void onRowsInserted(const QModelIndex& parent, int first, int last) {    
-    
-    m_mapping.reserve(static_cast<size_t>(last) - static_cast<size_t>(first) + 1);
 
-    int capacity = m_mapping.capacity();  // Needed for the Q_ASSERT later.
+
+  Q_SLOT void onRowsInserted(const QModelIndex& parent, int first, int last) 
+  {    
+    Q_UNUSED(parent);
+
+    m_mapping.reserve(static_cast<size_t>(last) - static_cast<size_t>(first) + 1 + m_mapping.size());
+
+    size_t capacity = m_mapping.capacity();  // Needed for the Q_ASSERT later.
 
     {
       ScopedTimer t(__func__);
       
       for (int i = first; i <= last; ++i) {
-        QModelIndex idx = createIndex(i, 0);
+        QModelIndex idx = createIndex(i, 4);
         m_mapping.emplace_back(data(idx, Qt::DisplayRole).toString(), i);
       }      
     }
@@ -144,11 +150,11 @@ public:
         return a.first < b.first;
       });
     }
-
   }
 
   
-  QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override{
+  QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override {
+    Q_UNUSED(parent);
     if (!sourceModel()) {
       return QModelIndex();
     }
@@ -156,7 +162,8 @@ public:
     return createIndex(row, column);
   }
 
-  QModelIndex parent(const QModelIndex& child) const override {    
+  QModelIndex parent(const QModelIndex& child) const override {   
+
     // No tree,
     return QModelIndex();
   }

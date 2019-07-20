@@ -1,12 +1,11 @@
 #pragma once
 
-#include <QtWidgets/QDialog>
-#include <QSortFilterProxyModel>
-#include "StarDataTableModel.h"
-#include "SortProxyModel.h"
-#include "ui_CelestialGUI.h"
 
-class CStarDataTableModel;
+#include "SortProxyModel.h"
+#include "StarDataTableModel.h"
+
+#include "ui_CelestialGUI.h" // NOLINT
+
 
 class CelestialGUI : public QDialog
 {
@@ -15,11 +14,15 @@ private:
   Ui::CelestialGUIClass ui;
 
   CStarDataTableModel* m_pModel { new CStarDataTableModel(this) };
-  //QSortFilterProxyModel* m_pProxyModel { new QSortFilterProxyModel() };
+  
   CSortProxyModel* m_pProxyModel { new CSortProxyModel() };
 
 public:
-  CelestialGUI(QWidget *parent = nullptr);
+  explicit CelestialGUI(QWidget *parent = nullptr);
+  ~CelestialGUI() = default;
 
+  CelestialGUI(const CelestialGUI&) = delete;
+  CelestialGUI(CelestialGUI&&) = delete;
+  CelestialGUI& operator=(const CelestialGUI&) = delete;
 
 };

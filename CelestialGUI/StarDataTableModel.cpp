@@ -1,11 +1,11 @@
 #include "StarDataTableModel.h"
 #include "StarCatalog.h"
 #include "ConstellationData.h"
-#include <QDebug>
-#include <QThread>
-#include <QDir>
-#include <QVector>
-#include <qtconcurrentrun.h>
+#include <QDebug> // NOLINT
+#include <QThread> // NOLINT
+#include <QDir> // NOLINT
+#include <QVector> // NOLINT
+#include <qtconcurrentrun.h> // NOLINT
 #include "ScopedTimer.hpp"
 
 CStarDataTableModel::CStarDataTableModel(QObject *parent)
@@ -24,7 +24,7 @@ void CStarDataTableModel::loadData() {
   QDir dirOtherData("C:/Users/micha/Documents/Development/MyProjects/Misc/CelestialCalculations/Data/");
 
   for (const QString& filename : dirStarData.entryList({ "*.dat" })) {
-    CStarCatalog* catalog = new CStarCatalog();    
+    auto* catalog = new CStarCatalog();    
     QFuture<bool> res = QtConcurrent::run(catalog, &CStarCatalog::loadFromFile, dirStarData.absoluteFilePath(filename));
     results.push_back(res);
     m_catalogs.push_back(catalog);
@@ -45,9 +45,6 @@ void CStarDataTableModel::loadData() {
   emit dataLoaded();
 }
 
-CStarDataTableModel::~CStarDataTableModel()
-{
-}
 
 [[nodiscard]]
 int CStarDataTableModel::getAllStarsCount() const {
@@ -68,6 +65,7 @@ int CStarDataTableModel::getCatalogNumber(int row) const {
     }
     ++number;
   }  
+  return -1;
 }
 
 [[nodiscard]]
@@ -85,7 +83,7 @@ auto CStarDataTableModel::getElementIndex(int row) const {
     return std::make_pair(-1, -1);
   }
 
-  if (m_catalogs.at(number)->isEmpty()) {
+  if (m_catalogs.at(number)->empty()) {
     return std::make_pair(-1, -1);
   }
 
@@ -122,7 +120,12 @@ int CStarDataTableModel::columnCount(const QModelIndex& parent) const {
     return 0;
   }
   
-  return 8;
+  return COLUMN_COUNT;
+}
+
+template <typename E>
+constexpr auto to_underlying(E e) noexcept {
+  return static_cast<std::underlying_type_t<E>>(e);
 }
 
 [[nodiscard]]
@@ -141,46 +144,48 @@ QVariant CStarDataTableModel::data(const QModelIndex& index, int role) const {
     }
 
     switch(index.column()) {
-      case 0: 
-        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getName());
-      case 1: 
+      case to_underlying(Column::NAME):
+        return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getName();
+      case to_underlying(Column::RA):
         return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getRa());
-      case 2: 
+      case to_underlying(Column::DECL):
         return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getDecl());
-      case 3: 
+      case to_underlying(Column::MV):
         return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getMv());
-      case 4:
+      case to_underlying(Column::CONSTELLATION):
       {
         auto abbr = m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getConstellation();
         return m_constellationData->getFullname(abbr);
       }
-      case 5: 
-        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getAltName());
-      case 6: 
-        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getComment());
-      case 7: 
-        return QString::fromStdString(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getCatalogName());
+      case to_underlying(Column::ALT_NAME):
+        return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getAltName();
+      case to_underlying(Column::COMMENT):
+        return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getComment();
+      case to_underlying(Column::CATALOG):
+        return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getCatalogName();
       default: return QVariant();    
     } 
   }
   return QVariant();
 }
 
-QVariant CStarDataTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
-   
+
+
+
+QVariant CStarDataTableModel::headerData(int section, Qt::Orientation orientation, int role) const {   
   switch (role) {
     default: break;
     case Qt::DisplayRole: {
       if ( orientation == Qt::Horizontal ) {
         switch(section) {
-          case 0 : return "Name";
-          case 1 : return "RA";
-          case 2 : return "DECL";
-          case 3 : return "MV";
-          case 4 : return "Constellation";
-          case 5 : return "Alternate name";
-          case 6 : return "Comment";
-          case 7 : return "CatalogName";
+          case to_underlying(Column::NAME) : return "Name";
+          case to_underlying(Column::RA) : return "RA";
+          case to_underlying(Column::DECL) : return "DECL";
+          case to_underlying(Column::MV) : return "MV";
+          case to_underlying(Column::CONSTELLATION) : return "Constellation";
+          case to_underlying(Column::ALT_NAME) : return "Alternate name";
+          case to_underlying(Column::COMMENT) : return "Comment";
+          case to_underlying(Column::CATALOG) : return "CatalogName";
           default: return QVariant();        
         }
       } else {

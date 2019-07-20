@@ -1,15 +1,15 @@
 #pragma once
 
-#include <QObject>
-#include <QMap>
-#include <string>
+#include <QObject> // NOLINT
+#include <QMap> // NOLINT
+#include <string> // NOLINT
 #include "ConstellationElement.h"
 
 class QIODevice;
 
 class CConstellationData : public QObject
 {
-  Q_OBJECT
+  Q_OBJECT // NOLINT
 
 private:
 
@@ -18,8 +18,14 @@ private:
   bool read(QIODevice* device);
 
 public:
+
   CConstellationData(QObject *parent = nullptr);
-  ~CConstellationData();
+  ~CConstellationData() = default;
+
+  CConstellationData(const CConstellationData&) = delete;
+  CConstellationData(CConstellationData&&) = delete; 
+  CConstellationData& operator=(const CConstellationData&)= delete;
+  CConstellationData& operator=(CConstellationData&&) = delete;
 
   bool loadFromFile(const QString& filename);
 
@@ -36,5 +42,6 @@ public:
   QString getFullname(const std::string& abbr) const {    
     return getFullname(QString::fromStdString(abbr));    
   }
+
   
 };

@@ -1,5 +1,5 @@
 #include "CelestialGUI.h"
-#include <QtWidgets/QApplication>
+#include <QtWidgets/QApplication> // NOLINT
 
 int main(int argc, char *argv[])
 {

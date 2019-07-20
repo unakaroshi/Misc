@@ -1,13 +1,13 @@
 #pragma once
 
-#include <QAbstractTableModel>
+#include <QAbstractTableModel> // NOLINT
 
 class CStarCatalog;
 class CConstellationData;
 
 class CStarDataTableModel : public QAbstractTableModel
 {
-  Q_OBJECT
+  Q_OBJECT // NOLINT
 private:
   //CStarCatalog* m_catalog;
 
@@ -31,16 +31,21 @@ private:
     MV = 3,
     CONSTELLATION = 4,
     ALT_NAME = 5,
-    COMMENT = 6
+    COMMENT = 6,
+    CATALOG = 7  
   };
+
+  const int COLUMN_COUNT = 8;
 public:
+  CStarDataTableModel(QObject *parent = nullptr);
+  virtual ~CStarDataTableModel() = default;
 
+  CStarDataTableModel(const CStarDataTableModel&) = delete;
+  CStarDataTableModel(CStarDataTableModel&&) = delete;
+  CStarDataTableModel operator=(const CStarDataTableModel&&) = delete;
 
-  CStarDataTableModel(QObject *parent);
 
   void loadData();
-  
-  ~CStarDataTableModel();
 
   [[nodiscard]] int getAllStarsCount() const; 
 
@@ -50,10 +55,10 @@ public:
 
   [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
 
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
   [[nodiscard]] QStringList getStarCatalogNames();
 
-signals:
+signals: // NOLINT
   void dataLoaded();
 };

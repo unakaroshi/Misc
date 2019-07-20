@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QObject>
-#include <QMutex>
+#include <QObject> // NOLINT
+#include <QMutex> // NOLINT
+#include <QVector> // NOLINT
 #include "StarData.h"
 
 
@@ -9,7 +10,7 @@ class QIODevice;
 
 class CStarCatalog : public QObject
 {
-  Q_OBJECT
+  Q_OBJECT // NOLINT
 
 private:
   
@@ -19,7 +20,7 @@ private:
   QString m_description{};
   QString m_source{};
 
-  QList<CStarData> m_stars {};
+  QVector<CStarData> m_stars {};
   //std::list<CStarData> m_stars { };
 
   QMutex m_mutex {};
@@ -31,13 +32,13 @@ protected:
 
 public:
   CStarCatalog(QObject* parent = nullptr);
-  virtual ~CStarCatalog() = default;
+  ~CStarCatalog() = default;
 
   CStarCatalog(const CStarCatalog& other) = delete;
     
   CStarCatalog(CStarCatalog&& other) noexcept = delete;    
 
-  CStarCatalog& CStarCatalog::operator= (const CStarCatalog& rhs) = delete;    
+  CStarCatalog& operator=(const CStarCatalog& rhs) = delete;    
  
   [[nodiscard]] bool loadFromFile(const QString& filename);
 
@@ -56,10 +57,9 @@ public:
   void setSource(const QString& s) noexcept { m_source = s; }
   [[nodiscard]] QString getSource() const noexcept { return m_source; }
 
-  [[nodiscard]] int size() const noexcept { return m_stars.size();
-  }
+  [[nodiscard]] int size() const noexcept { return m_stars.size(); }
 
-  [[nodiscard]] bool isEmpty() const noexcept { return m_stars.isEmpty(); }
+  [[nodiscard]] bool empty() const noexcept { return m_stars.empty(); }
   
   [[nodiscard]] int getStarsCount() const noexcept { return m_stars.size(); }
 
