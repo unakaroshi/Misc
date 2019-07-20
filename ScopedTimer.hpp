@@ -1,22 +1,20 @@
 #pragma once
 
 
-#include <iostream>
-#include <chrono>
-#include <QDebug>
+#include <iostream> // NOLINT
+#include <chrono> // NOLINT
+#include <QDebug> // NOLINT
 
 
 class ScopedTimer {
-
   using ClockType = std::chrono::steady_clock;
+
 private:
   const char* m_function {};
   const ClockType::time_point m_start  {};
 
 public:
-  
-
-  ScopedTimer(const char* func) 
+  explicit ScopedTimer(const char* func) 
     : m_function { func }
     , m_start { ClockType::now() } 
   {
@@ -24,8 +22,9 @@ public:
 
   ScopedTimer(const ScopedTimer&) = delete;
   ScopedTimer(ScopedTimer&&) = delete;
-  auto operator=(const ScopedTimer&)->ScopedTimer & = delete;
-  auto operator=(ScopedTimer&&)->ScopedTimer & = delete;
+
+  ScopedTimer& operator=(const ScopedTimer&) = delete;
+  ScopedTimer& operator=(ScopedTimer&&) = delete;
 
   ~ScopedTimer() {    
     auto stop = ClockType::now();
