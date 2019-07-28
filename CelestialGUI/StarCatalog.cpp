@@ -99,12 +99,7 @@ bool CStarCatalog::read(QIODevice *device) {
   for (auto res : results) {
     res.waitForFinished();
   }
-  /*
-  {
-    ScopedTimer t("Sorting");
-    std::stable_sort(std::execution::par, m_stars.begin(), m_stars.end());
-  }
-   */
+   
   return true;
 }
 

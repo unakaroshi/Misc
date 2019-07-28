@@ -12,17 +12,30 @@
 
 #include "ScopedTimer.hpp"
 
-class CSortProxyModel : public QAbstractProxyModel 
-{
+class SortProxyModelLt {
+public:
+  bool operator()(const std::pair<QString, int>& r1, const std::pair<QString, int>& r2) const {
+    return r1.first < r2.first;
+  }
+};
+
+class SortProxyModelGt {
+public:
+  bool operator()(const std::pair<QString, int>& r1, const std::pair<QString, int>& r2) const {
+    return r1.first > r2.first;
+  }
+
+};
+
+class CSortProxyModel : public QAbstractProxyModel {
   Q_OBJECT
 
-private: 
+private:
   std::vector<std::pair<QString, int>> m_mapping;
 
 public:
-  CSortProxyModel(QObject* parent = nullptr) 
-  : QAbstractProxyModel(parent) 
-  {
+  CSortProxyModel(QObject* parent = nullptr)
+    : QAbstractProxyModel(parent) {
   }
 
   void setSourceModel(QAbstractItemModel* newSourceModel) {
@@ -48,7 +61,7 @@ public:
         this, SIGNAL(columnsAboutToBeInserted(const QModelIndex&, int, int)));
       disconnect(sourceModel(), SIGNAL(columnsInserted(const QModelIndex&, int, int)),
         this, SIGNAL(columnsInserted(const QModelIndex&, int, int)));
-     
+
       disconnect(sourceModel(), SIGNAL(columnsAboutToBeRemoved(const QModelIndex&, int, int)),
         this, SIGNAL(columnsAboutToBeRemoved(const QModelIndex&, int, int)));
       disconnect(sourceModel(), SIGNAL(columnsRemoved(const QModelIndex&, int, int)),
@@ -97,7 +110,7 @@ public:
       connect(sourceModel(), SIGNAL(columnsInserted(const QModelIndex&, int, int)),
         this, SIGNAL(columnsInserted(const QModelIndex&, int, int)));
 
- 
+
 
       connect(sourceModel(), SIGNAL(columnsAboutToBeRemoved(const QModelIndex&, int, int)),
         this, SIGNAL(columnsAboutToBeRemoved(const QModelIndex&, int, int)));
@@ -120,13 +133,13 @@ public:
       connect(sourceModel(), SIGNAL(layoutChanged()),
         this, SIGNAL(layoutChanged()));
     }
+
     endResetModel();
   }
 
 
 
-  Q_SLOT void onRowsInserted(const QModelIndex& parent, int first, int last) 
-  {    
+  Q_SLOT void onRowsInserted(const QModelIndex& parent, int first, int last) {
     Q_UNUSED(parent);
 
     m_mapping.reserve(static_cast<size_t>(last) - static_cast<size_t>(first) + 1 + m_mapping.size());
@@ -135,39 +148,40 @@ public:
 
     {
       ScopedTimer t(__func__);
-      
+
       for (int i = first; i <= last; ++i) {
-        QModelIndex idx = createIndex(i, 4);
+        QModelIndex idx = createIndex(i, 0);
         m_mapping.emplace_back(data(idx, Qt::DisplayRole).toString(), i);
-      }      
+      }
     }
     Q_ASSERT(capacity == m_mapping.capacity());
     Q_ASSERT(m_mapping.capacity() == m_mapping.size());
 
-    {
-      ScopedTimer t(__func__);
-      std::sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [](const auto &a, const auto &b) {
-        return a.first < b.first;
-      });
-    }
+    //  {
+
+    //    std::sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [](const auto &a, const auto &b) {
+    //      return a.first < b.first;
+    //    });
+    //  }
   }
 
-  
-  QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override {
+
+  QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override {
     Q_UNUSED(parent);
-    if (!sourceModel()) {
+
+    if (!sourceModel() || row < 0 || column < 0 || parent.isValid()) {
       return QModelIndex();
     }
- 
+
     return createIndex(row, column);
   }
 
-  QModelIndex parent(const QModelIndex& child) const override {   
+  QModelIndex parent(const QModelIndex& child) const override {
 
     // No tree,
     return QModelIndex();
   }
-  
+
   int rowCount(const QModelIndex& parent = QModelIndex()) const override {
     if (!sourceModel()) {
       return 0;
@@ -188,14 +202,14 @@ public:
       return QModelIndex();
     }
 
-    
+
     if (index.row() >= m_mapping.size()) {
       return sourceModel()->index(index.row(), index.column());
     }
 
     auto elem = m_mapping.at(index.row());
 
-    return createIndex(elem.second,index.column());
+    return createIndex(elem.second, index.column());
   }
 
   QModelIndex mapFromSource(const QModelIndex& index) const override {
@@ -205,12 +219,24 @@ public:
 
     auto it = std::find_if(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&index](const auto& a) {
       return a.second == index.row();
-    });
+      });
 
     if (it == m_mapping.end()) {
       return QModelIndex();
     }
-    
+
     return createIndex(it - m_mapping.begin(), index.column());
+  }
+
+  void sort(int column, Qt::SortOrder order) override {
+    ScopedTimer t(__func__);
+    beginResetModel();
+    if (order == Qt::AscendingOrder) {
+      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), SortProxyModelLt {});
+    } else {
+      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), SortProxyModelGt {});
+    }
+
+    endResetModel();
   }
 };

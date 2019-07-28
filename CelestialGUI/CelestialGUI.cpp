@@ -19,7 +19,7 @@ CelestialGUI::CelestialGUI(QWidget* parent)
 
   ui.tableView->setSortingEnabled(true);
   ui.tableView->setModel(m_pProxyModel);
-  ui.tableView->setModel(m_pModel);
+  //ui.tableView->setModel(m_pModel);
 
 
 
@@ -29,9 +29,12 @@ CelestialGUI::CelestialGUI(QWidget* parent)
     auto catalogs = m_pModel->getStarCatalogNames();
     std::for_each(catalogs.begin(), catalogs.end(),
                   [&](const QString &cat) { ui.cb_catalogs->addItem(cat); });
-    // m_pProxyModel->setSortingColumn(0);
+    
 
   });
+
+
+  //connect(ui.btn_sort, &QPushButton::clicked, [&]() { m_pProxyModel->setSortingColumn(0); });
 
   connect(ui.cb_catalogs, qOverload<const QString&>(&QComboBox::currentTextChanged), [&](const QString& s) {
 
