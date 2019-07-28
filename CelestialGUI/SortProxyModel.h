@@ -12,26 +12,13 @@
 
 #include "ScopedTimer.hpp"
 
-class SortProxyModelLt {
-public:
-  bool operator()(const std::pair<QString, int>& r1, const std::pair<QString, int>& r2) const {
-    return r1.first < r2.first;
-  }
-};
-
-class SortProxyModelGt {
-public:
-  bool operator()(const std::pair<QString, int>& r1, const std::pair<QString, int>& r2) const {
-    return r1.first > r2.first;
-  }
-
-};
 
 class CSortProxyModel : public QAbstractProxyModel {
   Q_OBJECT
 
 private:
-  std::vector<std::pair<QString, int>> m_mapping;
+  //std::vector<std::pair<QString, int>> m_mapping;
+  std::vector<int> m_mapping;
 
 public:
   CSortProxyModel(QObject* parent = nullptr)
@@ -150,8 +137,9 @@ public:
       ScopedTimer t(__func__);
 
       for (int i = first; i <= last; ++i) {
-        QModelIndex idx = createIndex(i, 0);
-        m_mapping.emplace_back(data(idx, Qt::DisplayRole).toString(), i);
+        //QModelIndex idx = createIndex(i, 0);
+        //m_mapping.emplace_back(data(idx, Qt::DisplayRole).toString(), i);
+        m_mapping.emplace_back(i);
       }
     }
     Q_ASSERT(capacity == m_mapping.capacity());
@@ -209,7 +197,7 @@ public:
 
     auto elem = m_mapping.at(index.row());
 
-    return createIndex(elem.second, index.column());
+    return createIndex(elem, index.column());
   }
 
   QModelIndex mapFromSource(const QModelIndex& index) const override {
@@ -218,7 +206,7 @@ public:
     }
 
     auto it = std::find_if(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&index](const auto& a) {
-      return a.second == index.row();
+      return a == index.row();
       });
 
     if (it == m_mapping.end()) {
@@ -231,10 +219,44 @@ public:
   void sort(int column, Qt::SortOrder order) override {
     ScopedTimer t(__func__);
     beginResetModel();
-    if (order == Qt::AscendingOrder) {
-      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), SortProxyModelLt {});
+        
+    if (order == Qt::AscendingOrder) {          
+      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&](auto e1,auto e2) {       
+
+        QVariant v1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole);
+        QVariant v2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole);
+
+        if (v1.type() == QMetaType::Double && v2.type() == QMetaType::Double) {
+          return v1.toDouble() < v2.toDouble();
+        } else {
+          return v1.toString().compare(v2.toString(), Qt::CaseInsensitive) < 0;
+        }
+
+        /*
+        
+        QString s1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole).toString();
+        QString s2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole).toString();
+
+        return s1.compare(s2, Qt::CaseInsensitive) < 0;
+        */
+      });
+      
     } else {
-      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), SortProxyModelGt {});
+      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&](auto e1, auto e2) {
+        QVariant v1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole);
+        QVariant v2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole);
+
+        if (v1.type() == QMetaType::Double && v2.type() == QMetaType::Double) {
+          return v1.toDouble() > v2.toDouble();
+        } else if (v1.type() == QMetaType::QString) {
+          return v2.toString().compare(v1.toString(), Qt::CaseInsensitive) < 0;
+        }
+        //QString s1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole).toString();
+        //QString s2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole).toString();
+
+        //return s2.compare(s1, Qt::CaseInsensitive) < 0;
+
+        });
     }
 
     endResetModel();

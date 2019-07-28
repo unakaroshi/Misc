@@ -11,8 +11,15 @@ private:
   bool m_hasMv { false };
 
   double m_ra{0.0};
+  QString m_raString { };
+
   double m_decl{0.0};
+  QString m_declString { };
+
   double m_mv{0.0};
+  QString m_mvString { };
+  
+  
   QString m_constellation{};
   QString m_altname{};
   QString m_comment{};
@@ -27,10 +34,13 @@ public:
     : m_name(std::move(name))
     , m_hasRa(hasRa)
     , m_ra(ra)
+    , m_raString(QString::number(ra))
     , m_hasDecl(hasDecl)
     , m_decl(decl)
+    , m_declString(QString::number(decl))
     , m_hasMv(hasMv)
     , m_mv(mv)
+    , m_mvString(QString::number(mv))
     , m_constellation(std::move(constellation))
     , m_altname(std::move(altname))
     , m_comment(std::move(comment))
@@ -51,6 +61,9 @@ public:
   [[nodiscard]] QString getConstellation() const noexcept { return m_constellation; }
   [[nodiscard]] QString getComment() const noexcept { return m_comment; }
   [[nodiscard]] QString getCatalogName() const noexcept { return m_catalogname; }
+  [[nodiscard]] QString getRaString() const noexcept { return m_raString; }
+  [[nodiscard]] QString getDeclString() const noexcept { return m_declString;}
+  [[nodiscard]] QString getMvString() const noexcept { return m_mvString;}
   [[nodiscard]] constexpr double getRa() const noexcept { return m_ra; }
   [[nodiscard]] constexpr double getDecl() const noexcept { return m_decl; }
   [[nodiscard]] constexpr double getMv () const noexcept { return m_mv; }

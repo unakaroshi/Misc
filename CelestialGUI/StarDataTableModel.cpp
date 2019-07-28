@@ -36,8 +36,7 @@ void CStarDataTableModel::loadData() {
   int oldcount = 0;
   for (auto result : results) {
     result.waitForFinished();
-  }
-  
+  }  
 
   beginInsertRows(QModelIndex(), 0, getAllStarsCount() - 1);
   endInsertRows();
@@ -147,11 +146,11 @@ QVariant CStarDataTableModel::data(const QModelIndex& index, int role) const {
       case to_underlying(Column::NAME):
         return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getName();
       case to_underlying(Column::RA):
-        return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getRa());
+        return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getRa();
       case to_underlying(Column::DECL):
-        return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getDecl());
+        return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getDeclString();
       case to_underlying(Column::MV):
-        return QString::number(m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getMv());
+        return m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getMvString();
       case to_underlying(Column::CONSTELLATION):
       {
         auto abbr = m_catalogs.at(catalogIndex)->getStars().at(elementIndex).getConstellation();
