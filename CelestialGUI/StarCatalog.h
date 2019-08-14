@@ -32,7 +32,7 @@ protected:
 
 public:
   CStarCatalog(QObject* parent = nullptr);
-  ~CStarCatalog() = default;
+  ~CStarCatalog() override = default;
 
   CStarCatalog(const CStarCatalog& other) = delete;
     

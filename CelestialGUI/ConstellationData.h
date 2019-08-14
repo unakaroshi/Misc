@@ -29,19 +29,22 @@ public:
 
   bool loadFromFile(const QString& filename);
 
-  QString getFullname(const QString& abbr) const {
+  [[nodiscard]] QString getFullname(const QString& abbr) const noexcept {
     // This prevents us from generating a default
     // constructor con CConstellationElement which
     // would be called every time this function
     // gets called.
-    static CConstellationElement tmp("", "");
-    auto el = m_data.value(abbr,tmp);
-    return QString::fromStdString(el.getName());
+    static CConstellationElement tmp("", "",0.0,0.0,"",0.0,0.0,"");
+    return m_data.value(abbr,tmp).getName();    
   }
 
-  QString getFullname(const std::string& abbr) const {    
-    return getFullname(QString::fromStdString(abbr));    
+  [[nodiscard]] CConstellationElement getData(const QString& abbr) const noexcept {
+    // This prevents us from generating a default
+    // constructor con CConstellationElement which
+    // would be called every time this function
+    // gets called.
+    static CConstellationElement tmp("", "", 0.0, 0.0, "", 0.0, 0.0, "");
+    return m_data.value(abbr, tmp);
   }
-
-  
+ 
 };

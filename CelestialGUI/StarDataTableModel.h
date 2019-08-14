@@ -5,8 +5,7 @@
 class CStarCatalog;
 class CConstellationData;
 
-class CStarDataTableModel : public QAbstractTableModel
-{
+class CStarDataTableModel : public QAbstractTableModel {
   Q_OBJECT // NOLINT
 private:
   //CStarCatalog* m_catalog;
@@ -22,6 +21,10 @@ private:
   [[nodiscard]] auto getElementIndex(int row) const;
 
   [[nodiscard]] auto getElementIndex(const QModelIndex& index) const;
+  
+  [[nodiscard]] QVariant getToolTipRole(const QModelIndex& index) const;
+
+  [[nodiscard]] QVariant getDisplayRole(const QModelIndex& index) const;
 
 
   enum class Column {
@@ -32,13 +35,13 @@ private:
     CONSTELLATION = 4,
     ALT_NAME = 5,
     COMMENT = 6,
-    CATALOG = 7  
+    CATALOG = 7
   };
 
   const int COLUMN_COUNT = 8;
 public:
-  CStarDataTableModel(QObject *parent = nullptr);
-  virtual ~CStarDataTableModel() = default;
+  CStarDataTableModel(QObject* parent = nullptr);
+  ~CStarDataTableModel() override = default;
 
   CStarDataTableModel(const CStarDataTableModel&) = delete;
   CStarDataTableModel(CStarDataTableModel&&) = delete;
@@ -47,13 +50,14 @@ public:
 
   void loadData();
 
-  [[nodiscard]] int getAllStarsCount() const; 
+  [[nodiscard]] int getAllStarsCount() const;
 
   [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
 
   [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
 
   [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
+
 
   [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 

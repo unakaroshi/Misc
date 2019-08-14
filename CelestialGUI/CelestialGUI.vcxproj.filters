@@ -83,8 +83,8 @@
     <ClInclude Include="ConstellationElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".clang-tidy" />
+    <ClInclude Include="CursorGuard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

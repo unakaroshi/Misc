@@ -9,8 +9,15 @@
 #include <utility> // NOLINT
 #include <algorithm> // NOLINT
 #include <execution> // NOLINT
+#include <QVector>
+#include <future>
+#include <QApplication>
+#include <QMutex>
+#include <QMutexLocker>
+
 
 #include "ScopedTimer.hpp"
+#include "CursorGuard.h"
 
 
 class CSortProxyModel : public QAbstractProxyModel {
@@ -137,20 +144,13 @@ public:
       ScopedTimer t(__func__);
 
       for (int i = first; i <= last; ++i) {
-        //QModelIndex idx = createIndex(i, 0);
-        //m_mapping.emplace_back(data(idx, Qt::DisplayRole).toString(), i);
-        m_mapping.emplace_back(i);
+        //m_mapping.emplace_back(i);
+        m_mapping.push_back(i);
       }
     }
+
     Q_ASSERT(capacity == m_mapping.capacity());
     Q_ASSERT(m_mapping.capacity() == m_mapping.size());
-
-    //  {
-
-    //    std::sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [](const auto &a, const auto &b) {
-    //      return a.first < b.first;
-    //    });
-    //  }
   }
 
 
@@ -218,47 +218,37 @@ public:
 
   void sort(int column, Qt::SortOrder order) override {
     ScopedTimer t(__func__);
+
     beginResetModel();
-        
-    if (order == Qt::AscendingOrder) {          
-      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&](auto e1,auto e2) {       
+    auto f = std::async([&]() {
+      if (order == Qt::AscendingOrder) {
+        std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&](auto e1, auto e2) {
+          QVariant v1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole);
+          QVariant v2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole);
 
-        QVariant v1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole);
-        QVariant v2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole);
+          if (v1.type() == QMetaType::Double && v2.type() == QMetaType::Double) {
+            return v1.toDouble() < v2.toDouble();
+          } else {
+            return v1.toString().compare(v2.toString(), Qt::CaseInsensitive) < 0;
+          }
+          });
+      } else {
+        std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&](auto e1, auto e2) {
+          QVariant v1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole);
+          QVariant v2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole);
 
-        if (v1.type() == QMetaType::Double && v2.type() == QMetaType::Double) {
-          return v1.toDouble() < v2.toDouble();
-        } else {
-          return v1.toString().compare(v2.toString(), Qt::CaseInsensitive) < 0;
-        }
+          if (v1.type() == QMetaType::Double && v2.type() == QMetaType::Double) {
+            return v1.toDouble() > v2.toDouble();
+          } else {
+            return v2.toString().compare(v1.toString(), Qt::CaseInsensitive) < 0;
+          }
+          });
+      }
+    });
 
-        /*
-        
-        QString s1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole).toString();
-        QString s2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole).toString();
-
-        return s1.compare(s2, Qt::CaseInsensitive) < 0;
-        */
-      });
-      
-    } else {
-      std::stable_sort(std::execution::par_unseq, m_mapping.begin(), m_mapping.end(), [&](auto e1, auto e2) {
-        QVariant v1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole);
-        QVariant v2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole);
-
-        if (v1.type() == QMetaType::Double && v2.type() == QMetaType::Double) {
-          return v1.toDouble() > v2.toDouble();
-        } else if (v1.type() == QMetaType::QString) {
-          return v2.toString().compare(v1.toString(), Qt::CaseInsensitive) < 0;
-        }
-        //QString s1 = sourceModel()->data(createIndex(e1, column), Qt::DisplayRole).toString();
-        //QString s2 = sourceModel()->data(createIndex(e2, column), Qt::DisplayRole).toString();
-
-        //return s2.compare(s1, Qt::CaseInsensitive) < 0;
-
-        });
-    }
+    f.get();
 
     endResetModel();
+    
   }
 };

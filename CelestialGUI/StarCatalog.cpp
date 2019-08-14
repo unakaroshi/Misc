@@ -1,19 +1,20 @@
 #include "StarCatalog.h"
 
+#include <qtconcurrentrun.h>  // NOLINT
+#include <QDebug>             // NOLINT
+#include <QDir>               // NOLINT
+#include <QDomDocument>       // NOLINT
+#include <QFile>              // NOLINT
+#include <QMessageBox>        // NOLINT
+#include <algorithm>          // NOLINT
+#include <execution>          // NOLINT
 #include "ScopedTimer.hpp"
-#include <QDebug> // NOLINT
-#include <QDir> // NOLINT
-#include <QDomDocument> // NOLINT
-#include <QFile> // NOLINT
-#include <QMessageBox> // NOLINT
-#include <algorithm> // NOLINT
-#include <execution> // NOLINT
-#include <qtconcurrentrun.h> // NOLINT
 
 CStarCatalog::CStarCatalog(QObject *parent) : QObject(parent) {}
 
 bool CStarCatalog::loadFromFile(const QString &filename) {
   QFile file(filename);
+ // qDebug() << __func__ << QThread::currentThreadId();
 
   if (!file.exists()) {
     return false;
@@ -31,7 +32,6 @@ bool CStarCatalog::loadFromFile(const QString &filename) {
 }
 
 bool CStarCatalog::read(QIODevice *device) {
-
   QString errorStr;
   int errorLine;
   int errorColumn;
@@ -99,12 +99,13 @@ bool CStarCatalog::read(QIODevice *device) {
   for (auto res : results) {
     res.waitForFinished();
   }
-   
+
   return true;
 }
 
 void CStarCatalog::extractLines(QList<QString>::iterator &begin,
                                 QList<QString>::iterator &end) {
+  //qDebug() << __func__ << QThread::currentThreadId();
   QVector<CStarData> localStars;
   localStars.reserve(end - begin);
 
@@ -124,12 +125,9 @@ void CStarCatalog::extractLines(QList<QString>::iterator &begin,
     auto altname = stringlist[5].trimmed();
     auto comment = stringlist[6].trimmed();
 
-    
     localStars.push_back(CStarData(name, hasRa, ra, hasDecl, decl, hasMv, mv,
-                                   constellation, altname, 
-                                   comment, catname));                                  
-
-  }); 
+                                   constellation, altname, comment, catname));
+  });
 
   {
     QMutexLocker locker(&m_mutex);
